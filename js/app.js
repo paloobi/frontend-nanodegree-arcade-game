@@ -1,11 +1,16 @@
 // Enemies our player must avoid
-var Enemy = function() {
+var Enemy = function(row, speed) {
     // Variables applied to each of our instances go here,
     // we've provided one for you to get started
 
     // The image/sprite for our enemies, this uses
     // a helper we've provided to easily load images
     this.sprite = 'images/enemy-bug.png';
+    this.x = 0;
+    this.y = row * 75;
+    this.speed = speed;
+    this.width = 101;
+    this.height = 101;
 };
 
 // Update the enemy's position, required method for game
@@ -14,6 +19,19 @@ Enemy.prototype.update = function(dt) {
     // You should multiply any movement by the dt parameter
     // which will ensure the game runs at the same speed for
     // all computers.
+    this.x += this.speed * dt;
+
+    var playerX = player.getX();
+    var playerY = player.getY() + 100;
+    var playerWidth = player.getWidth();
+    var playerHeight = player.getHeight();
+
+    if (this.x < playerX + player.width &&
+        this.x + this.width > playerX &&
+        this.y < playerY + player.height &&
+        this.height + this.y > playerY) {
+        player.reset("loss");
+    }
 };
 
 // Draw the enemy on the screen, required method for game
@@ -25,11 +43,125 @@ Enemy.prototype.render = function() {
 // This class requires an update(), render() and
 // a handleInput() method.
 
+var Player = function() {
+    this.sprite = 'images/char-boy.png';
+    this.x = 200;
+    this.y = 400;
+    this.width = 101;
+    this.height = 101;
 
+    this.direction = "none"
+    this.wins = 0;
+    this.losses = 0;
+};
+
+Player.prototype.update = function(dt) {
+    switch (this.direction) {
+        case 'left':
+            if (this.x >= 20) {
+                this.x -= 100;
+            }
+            break;
+        case 'up':
+            this.y -= 80;
+            break;
+        case 'right':
+            if (this.x <= 350) {
+                this.x += 100;
+            }
+            break;
+        case 'down':
+            if (this.y <= 360) {
+                this.y += 80;
+            }
+            break;
+    }
+    this.direction = "none";
+    if (this.y <= 70) {
+        this.reset("win");
+    }
+};
+
+Player.prototype.render = function() {
+    ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+};
+
+Player.prototype.handleInput = function(keyCode) {
+    this.direction = keyCode;
+};
+
+Player.prototype.getX = function() {
+// returns an array containing y coordinate of player
+    return this.x;
+}
+
+Player.prototype.getY = function() {
+// returns an array containing y coordinate of player
+    return this.y;
+}
+
+Player.prototype.getWidth = function() {
+    return this.width;
+}
+
+Player.prototype.getHeight = function() {
+    return this.height;
+}
+
+Player.prototype.reset = function(outcome) {
+    this.x = 200;
+    this.y = 400;
+    if (outcome == "loss") {
+        this.losses -= 1;
+    } else if (outcome == "win") {
+        this.wins += 1;
+    }
+};
+
+Player.prototype.renderScores = function() {
+    ctx.fillStyle = "white";
+    ctx.arc(50,91,20,0*Math.PI,2*Math.PI)
+    ctx.fill();
+
+
+    ctx.fillStyle = "white";
+    ctx.arc(460,91,20,0*Math.PI,2*Math.PI)
+    ctx.fill();
+
+    ctx.font = "24px Arial";
+    ctx.textAlign = "center"
+    ctx.fillStyle = "red";
+    ctx.fillText(player.losses,50,100);
+    ctx.fillStyle = "black";
+    ctx.fillText(player.wins,460,100);
+}
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
 // Place the player object in a variable called player
 
+function getRandomInt(min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+var allEnemies = [];
+
+var myVar;
+
+function spawnEnemies() {
+    myVar = setInterval(enemySpawner, 2000);
+}
+
+function enemySpawner() {
+    row = getRandomInt(1,3);
+    speed = getRandomInt(50,200);
+    allEnemies.push(new Enemy(row, speed));
+    enemyInterval = getRandomInt(1000, 3000);
+    enemyCounter = 0;
+};
+
+spawnEnemies();
+
+var player = new Player();
 
 
 // This listens for key presses and sends the keys to your
