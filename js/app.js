@@ -9,8 +9,8 @@ var Enemy = function(row, speed) {
     this.x = 0;
     this.y = row * 75;
     this.speed = speed;
-    this.width = 101;
-    this.height = 101;
+    this.width = 100;
+    this.height = 60;
 };
 
 // Update the enemy's position, required method for game
@@ -21,17 +21,21 @@ Enemy.prototype.update = function(dt) {
     // all computers.
     this.x += this.speed * dt;
 
-    var playerX = player.getX();
-    var playerY = player.getY() + 100;
+    //retrieve player variables to create a player rectangle
+    //these values are then used for collision detection
+    var playerX = player.getX() + 20;
+    var playerY = player.getY() + 60;
     var playerWidth = player.getWidth();
     var playerHeight = player.getHeight();
 
-    if (this.x < playerX + player.width &&
+    //detect whether player and enemy rectangles overlap
+    if (this.x < playerX + playerWidth &&
         this.x + this.width > playerX &&
-        this.y < playerY + player.height &&
-        this.height + this.y > playerY) {
+        this.y + 80 < playerY + playerHeight &&
+        this.height + this.y + 80 > playerY) {
         player.reset("loss");
     }
+
 };
 
 // Draw the enemy on the screen, required method for game
@@ -47,8 +51,8 @@ var Player = function() {
     this.sprite = 'images/char-boy.png';
     this.x = 200;
     this.y = 400;
-    this.width = 101;
-    this.height = 101;
+    this.width = 60;
+    this.height = 80;
 
     this.direction = "none"
     this.wins = 0;
@@ -148,15 +152,13 @@ var allEnemies = [];
 var myVar;
 
 function spawnEnemies() {
-    myVar = setInterval(enemySpawner, 2000);
+    myVar = setInterval(enemySpawner, 1000);
 }
 
 function enemySpawner() {
-    row = getRandomInt(1,3);
-    speed = getRandomInt(50,200);
+    var row = getRandomInt(1,3);
+    var speed = getRandomInt(150,250);
     allEnemies.push(new Enemy(row, speed));
-    enemyInterval = getRandomInt(1000, 3000);
-    enemyCounter = 0;
 };
 
 spawnEnemies();
