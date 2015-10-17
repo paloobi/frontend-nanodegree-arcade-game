@@ -128,25 +128,25 @@ Player.prototype.handleInput = function(keyCode) {
 // for use in collision detection by Enemy instances
 Player.prototype.getX = function() {
     return this.x;
-}
+};
 
 // returns player's y coordinate
 // for use in collision detection by Enemy instances
 Player.prototype.getY = function() {
     return this.y;
-}
+};
 
 // returns player's width property,
 // for use in collision detection by Enemy instances
 Player.prototype.getWidth = function() {
     return this.width;
-}
+};
 
 // returns plater's height property,
 // for use in collision detection by Enemy instances
 Player.prototype.getHeight = function() {
     return this.height;
-}
+};
 
 // Returns player to starting location
 // Input: outcomt - "loss" or "win"
@@ -169,17 +169,17 @@ Player.prototype.renderScores = function() {
 
     // create a white circle in the top left corner
     ctx.fillStyle = "white";
-    ctx.arc(50,91,20,0*Math.PI,2*Math.PI)
+    ctx.arc(50,91,20,0*Math.PI,2*Math.PI);
     ctx.fill();
 
     // create a white circle in the top right corner
     ctx.fillStyle = "white";
-    ctx.arc(460,91,20,0*Math.PI,2*Math.PI)
+    ctx.arc(460,91,20,0*Math.PI,2*Math.PI);
     ctx.fill();
 
     // set font properties
     ctx.font = "24px Arial";
-    ctx.textAlign = "center"
+    ctx.textAlign = "center";
 
     // display player losses in red in the upper left corner
     ctx.fillStyle = "red";
@@ -188,7 +188,7 @@ Player.prototype.renderScores = function() {
     // display player wins in black in the upper right corner
     ctx.fillStyle = "black";
     ctx.fillText(player.wins,460,100);
-}
+};
 
 // ---------- instantiate player and enemy objects ------------------
 
@@ -214,7 +214,7 @@ function enemySpawner() {
     var row = getRandomInt(1,3);
     var speed = getRandomInt(150,250);
     allEnemies.push(new Enemy(row, speed));
-};
+}
 
 // Begin spawning enemies every interval
 spawnEnemies();
